@@ -97,7 +97,7 @@ guidata(hObject, handles);
 global sims
 global tabulated_results
 
-tableData_max = get(handles.uitable3, 'data')
+tableData_max = get(handles.uitable3, 'data');
 
 tableData_max(:,2:end) = tabulated_results(1:6,:);
 
@@ -108,7 +108,7 @@ tableData_mean(:,2:end) = tabulated_results(7:end,:);
 set(handles.uitable3,'data',tableData_max);
 set(handles.uitable4,'data',tableData_mean);
 
-n_sims = size(sims,1)
+n_sims = size(sims,1);
 set(handles.slider1,'min',1);
 set(handles.slider1,'max',n_sims);
 set(handles.slider1,'SliderStep',[1/(n_sims-1) ,1/(n_sims-1)*5]);
@@ -218,7 +218,7 @@ else
     [error results filtered_sims] = get_CRC_error_multibrand(sims, sphere_signal, mean_bkg, pixel_sizes, FWHM, z_filter,'Siemens', showfig);
 end
 
- h = msgbox(['Number of CRCs outside EARL limits: ' num2str(results.fail)])
+ h = msgbox(['Number of CRCs outside EARL limits: ' num2str(results.fail)]);
 
  set(handles.edit7,'String', num2str(results.fail));
  

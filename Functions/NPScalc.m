@@ -67,7 +67,6 @@ function [Wavg, Savg, rbin, npsr, npsr_norm, avg_std, mean_bkg, psf, xaxis, yaxi
 % POSSIBILITY OF SUCH DAMAGE.
 
 
-clc;
 image = double(image);
 manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
 
@@ -102,8 +101,8 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
     BGxROI2 = min(BGxROI2,size(mip,2));
     BGyROI1 = min(BGyROI1,size(mip,1));
     BGyROI2 = min(BGyROI2,size(mip,1));
-    BGxROI1 = max(BGxROI1,1)
-    BGxROI2 = max(BGxROI2,1)
+    BGxROI1 = max(BGxROI1,1);
+    BGxROI2 = max(BGxROI2,1);
     BGyROI1 = max(BGyROI1,1);
     BGyROI2 = max(BGyROI2,1);
     
@@ -240,7 +239,7 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
 
     fprintf('Detrending data.\n\n');
     im3Dzm = im3D1 - im3D2;
-    size(im3Dzm)
+    
 
 % Calculate the center of the cylinder
     fprintf('Calculating the center of the phantom and determining pixel locations.\n\n');
@@ -261,16 +260,14 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
     L = find(Lobj == max(Lobj));
     S = regionprops(CC,'Centroid');
 
-    h = fspecial('gaussian',[17 17], 17)
+    h = fspecial('gaussian',[17 17], 17);
     fimavg = imfilter(imavg,h);  % Filtered average image
     s = regionprops(fimavg>max(fimavg(:))*0.1, fimavg, {'Centroid','WeightedCentroid'});
-    clc
-    s
     centroid.y = round(s.Centroid(2));
     centroid.x = round(s.Centroid(1));
 
     % Plot the average image with the centroid marked
-    f2 = figure
+    f2 = figure;
     imagesc([imaxisx(1) imaxisx(end)], [imaxisy(1) imaxisy(end) ], -imavg, [-max(imavg(:))*1.5 0])
     xlabel('mm')
     ylabel('mm')
@@ -307,7 +304,7 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
 % dimension as the x ROI, if desired.
 
     if calcdeltaz == 1
-        deltaz = round(deltax * pixelx ./ pixelz)
+        deltaz = round(deltax * pixelx ./ pixelz);
     end
 
     if(mod(deltaz,2))
@@ -413,19 +410,14 @@ end
         avg_std = avg_std/sqrt(2);
 
         Wavg = Wavg /double(deltax .* deltay .* deltaz .* 2 ) .* double(pixelx .* pixely .* pixelz);
-        factor = double(deltax .* deltay .* deltaz .* 2 ) .* double(pixelx .* pixely .* pixelz)
+        factor = double(deltax .* deltay .* deltaz .* 2 ) .* double(pixelx .* pixely .* pixelz);
         Savg = Savg /sqrt(2);
 
         % Calculate the axes values in the frequency domain.
         xaxis = -(1/(2*pixelx)):(1/(2*pixelx))/(floor(size(ROIzm,2)/2)):(1/(2*pixelx));
         yaxis = -(1/(2*pixely)):(1/(2*pixely))/(floor(size(ROIzm,1)/2)):(1/(2*pixely));
         zaxis = -(1/(2*pixelz)):(1/(2*pixelz))/(floor(size(ROIzm,3)/2)):(1/(2*pixelz));
-%         axlabel = ' (mm^{-1})';
-%         setappdata(0,'vaxis',yaxis)
-%         setappdata(0,'uaxis',xaxis)
-%         setappdata(0,'waxis',zaxis)
-%         setappdata(0,'axlabel',axlabel)
-
+        
 % The calculated zero-frequency value often contains an artifact.  The value
 % can be approximated based on an average of the surrounding values.
     if calczero == 0;
@@ -450,7 +442,7 @@ end
     end
     
    
-        f3 = figure
+        f3 = figure;
         subplot(3,1,1);
         plot(xaxis,Wavg(:,ceil(end/2),ceil(end/2)),'k.-');
         xlabel('x-dir (mm^{-1})');
@@ -485,28 +477,13 @@ end
     rmax = 1/(2*pixelx);
 
     if(calcrstep)
-        rstep =   1/(2*pixelx)/double(size(ROIzm,1)/2)
+        rstep =   1/(2*pixelx)/double(size(ROIzm,1)/2);
     end
 
     npsr = zeros(ceil(rmax/rstep)+1,1);
     nsamp = zeros(length(npsr),1);
     rbin = 0:rstep:rmax+rstep;
 
-
-%     f5 = figure
-%     imagesc([xaxis(1) xaxis(end)], [yaxis(1) yaxis(end)], imslice)
-%     colormap gray
-%     hold on
-%     plot(0,0,'r*')
-%     hold off
-%     axis image;
-%     impixelinfo;   
-%     f6 = figure
-%     imagesc(imslice)
-%     colormap gray
-%     hold on
-%     axis image;
-%     impixelinfo;
 
 % data with radius falling within a given bin are averaged together for a
 % low noise approximation of the NPS at the given radius
@@ -517,8 +494,6 @@ end
         R = intersect(R1,R2);
         
         [X Y] = ind2sub(size(imslice),R);
-        %plot(Y,X,'.');
-        %hold all
         
         npsr(i) = sum(imslice(R));
         nsamp(i) = length(R);
@@ -536,15 +511,7 @@ end
 
 % Plot radially averaged NPS
     
-%     f4 = figure
-%     plot(rbin,npsr,'.-')
-%     xlabel('spatial frequency (mm^{-1})')
-%     ylabel('NPS_r (Bq/ml mm^3)')
-%     grid on
-%     axis([rbin(1) rbin(end) -1.2*min(npsr) 1.1*max(npsr)])
-%     title('Radial Noise Power Spectrum')
-%     
-    f4 = figure
+    f4 = figure;
     semilogy(rbin,npsr,'.-')
     xlabel('spatial frequency (mm^{-1})')
     ylabel('NPS_r (Bq/ml^2 mm^3)')
@@ -552,15 +519,7 @@ end
     axis([rbin(1) rbin(end) -1.2*min(npsr) 1.1*max(npsr)])
     title('Average Radial Noise Power Spectrum')
     
-%     f9 = figure
-%     semilogy(rbin,sqrt(npsr),'.-')
-%     xlabel('spatial frequency (mm^{-1})')
-%     ylabel('sqrt(NPS_r) (HU mm^3)')
-%     grid on
-%     axis([rbin(1) rbin(end) -1.2*min(npsr) 1.1*max(npsr)])
-%     title('SQRT(Noise Power Spectrum)')
-
-fprintf('NPS calculated.\n\n');
+    fprintf('NPS calculated.\n\n');
 
 % Estimate the Noise PSF
     psf = real(fftshift(ifftn(circshift(ifftshift(double(Savg)),[0 0 0]))));

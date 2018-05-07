@@ -6,7 +6,7 @@ function [faxis, MTF, lsf, esf] = LSFcalc_R(im3D, dicom_headers, options)
 % This code is intended to accompany the paper:
 % Namías et. al
 % A novel approach to quantitative harmonization in PET
-% PMB (2018)
+% M Namías et al 2018 Phys. Med. Biol. 63 095019
 %
 % function [faxis, MTF, lsf, esf] = LSFcalc_R(im3D, dicom_headers, options);
 %
@@ -120,7 +120,7 @@ bkg( z_profile < max(z_profile(:)) * 0.1 )= 1;
 
 bkg_indexes = find(bkg);
 bkg_indexes2 = bkg_indexes(2:end)-bkg_indexes(1:end-1);
-slice = find(bkg_indexes2-1)
+slice = find(bkg_indexes2-1);
 
 f1 = sum( bkg( 1:slice - 1 ));
 f2 = sum( bkg( slice + 1:end ));
@@ -187,8 +187,8 @@ z_profile = squeeze(sum(sum(im3D,1),2));
         BGxROI2 = min(BGxROI2,size(mip,2));
         BGyROI1 = min(BGyROI1,size(mip,1));
         BGyROI2 = min(BGyROI2,size(mip,1));
-        BGxROI1 = max(BGxROI1,1)
-        BGxROI2 = max(BGxROI2,1)
+        BGxROI1 = max(BGxROI1,1);
+        BGxROI2 = max(BGxROI2,1);
         BGyROI1 = max(BGyROI1,1);
         BGyROI2 = max(BGyROI2,1);
 
@@ -224,7 +224,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     imaxisx = [1:size(im,2)] .* pixelx;
     imaxisy = [1:size(im,1)] .* pixely;
    
-    f2 = figure
+    f2 = figure;
     imagesc(-imavg, [-max(imavg(:))*1.5 0])
     xlabel('pixel')
     ylabel('pixel')
@@ -367,7 +367,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
         end
     
    
-    f3 = figure
+    f3 = figure;
     imagesc([imaxisy(1) imaxisy(end)],[imaxisx(1) imaxisx(end)], -imavg, [-1.5 0])
     xlabel(' mm')
     ylabel(' mm')
@@ -461,7 +461,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     
     % Plot oversampled ESF
 
-    f4 = figure
+    f4 = figure;
     plot(rbin,smooth(esf,10))
     xlabel('Radius (mm)')
     ylabel('Normalized ESF')

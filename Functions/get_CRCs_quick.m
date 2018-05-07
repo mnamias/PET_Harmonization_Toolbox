@@ -96,7 +96,7 @@ function [CRCmax, CRCmean, error, fail] = get_CRCs_quick(spheres, mean_bkg, sphe
                       %%%%%%%%%%%%%%%%%%%%%%
                       figure
                       
-                      h = boxplot(CRCmax, diameters(1:6),'outliersize',1)
+                      h = boxplot(CRCmax, diameters(1:6),'outliersize',1);
                       set(findobj(get(h(1), 'parent'), 'type', 'text'), 'fontsize', 11, 'FontName', 'Century Gothic');
                       
                       hold on
@@ -126,7 +126,7 @@ function [CRCmax, CRCmean, error, fail] = get_CRCs_quick(spheres, mean_bkg, sphe
                      
                      figure
                       
-                    h =   boxplot(CRCmean, diameters(1:6),'outliersize',1)
+                    h =   boxplot(CRCmean, diameters(1:6),'outliersize',1);
 %                    set(findobj(get(h(1), 'parent'), 'type', 'text'), 'fontsize', 14);
                       set(findobj(get(h(1), 'parent'), 'type', 'text'), 'fontsize', 11, 'FontName', 'Century Gothic');
 

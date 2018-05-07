@@ -51,7 +51,7 @@ fprintf('PET axial MTF & LSF Calculation\n\n')
 fprintf('This code is intended to accompany the paper:\n'); 
 fprintf('Namías et. al  "A\n')  
 fprintf('"A novel approach to quantitative harmonization in PET". \n')
-fprintf('PMB (2018) \n')
+fprintf('M Namías et al 2018 Phys. Med. Biol. 63 095019 \n')
 fprintf('****************************************************************************\n\n');
 
 %% User selected options
@@ -73,7 +73,7 @@ bkg( z_profile < max(z_profile(:)) * 0.1 )= 1;
 
 bkg_indexes = find(bkg);
 bkg_indexes2 = bkg_indexes(2:end)-bkg_indexes(1:end-1);
-slice = find(bkg_indexes2-1)
+slice = find(bkg_indexes2-1);
 
 f1 = sum( bkg( 1:slice - 1 ));
 f2 = sum( bkg( slice + 1:end ));
@@ -127,13 +127,13 @@ pixelz = dicom_headers(1).SliceThickness;
 
 % Create an average coronal image
 coronal_image = squeeze(im3D(:,round(end/2)-round(delta_x/2):round(end/2)+round(delta_x/2),:));
-size(coronal_image)
+
 coronal_image = squeeze(sum(coronal_image,2));
 im = coronal_image;
   
 % Show averaged image 
    
-    f2 = figure
+    f2 = figure;
     imagesc(im)
     xlabel('pixel')
     ylabel('pixel')

@@ -40,7 +40,7 @@ function [error results spheres] = get_CRC_error_multibrand(spheres, sphere_sign
 % ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 % POSSIBILITY OF SUCH DAMAGE.
 
-[a,b] = size(spheres)
+[a,b] = size(spheres);
 
 if(FWHM>15)
     FWHM = 15-randn;

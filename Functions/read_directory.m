@@ -77,8 +77,7 @@ clear dicom_headers_ok;
 %% Reads the image files, applies rescale slope and intercept
 image = single(zeros(dicom_headers(1).dicom_headers.Rows,dicom_headers(1).dicom_headers.Columns,length(dicom_headers)));
 clear di;
-for i = 1:length(dicom_headers)
-   i
+for i = 1:length(dicom_headers)   
     dicom_headers(i).dicom_headers.SmallestImagePixelValue = 0;
                     dicom_headers(i).dicom_headers.LargestImagePixelValue = 32767;
    dicom_headers(i).dicom_headers = orderfields(dicom_headers(i).dicom_headers,dicom_headers(1).dicom_headers); %%

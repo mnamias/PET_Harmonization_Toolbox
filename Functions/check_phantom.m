@@ -55,7 +55,7 @@ bkg( z_profile < max(z_profile(:)) * 0.1 )= 1;
 
 bkg_indexes = find(bkg);
 bkg_indexes2 = bkg_indexes(2:end)-bkg_indexes(1:end-1);
-slice = find(bkg_indexes2-1)
+slice = find(bkg_indexes2-1);
 
 f1 = sum( bkg( 1:slice - 1 ));
 f2 = sum( bkg( slice + 1:end ));
@@ -113,10 +113,8 @@ se = strel('disk',9);
 mask = imerode(mask,se);
 
 for i = min(z_analysis_range(:)):max(z_analysis_range(:))
-    i
     slice = image(:,:,i);
     h = fspecial('gaussian',9,5);
-    %filtered_slice = medfilt2(slice,[17 17]);
     filtered_slice = imfilter(slice, h) .* mask;
 
     s = regionprops( filtered_slice >  max(filtered_slice(:))*0.2  , filtered_slice, {'Centroid','WeightedCentroid'});
@@ -193,7 +191,7 @@ else
 [acq_times, ia, ic] = unique(acq_matrix);
 %acq_times_full = cell2mat(acq_times_full);
 number_beds = length(acq_times);
-    n_slices = sum(sum(ic==number_beds))
+    n_slices = sum(sum(ic==number_beds));
     
 end
 

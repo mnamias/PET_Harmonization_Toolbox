@@ -113,4 +113,4 @@ showfig = 1;
 
  %[cell2mat({results.CRCmax'}) ;cell2mat({results.CRCmean'})]
  
- tabulated_results = [ [mean(results.CRCmax,1)';mean(results.CRCmean,1)'], [min(results.CRCmax,[],1)';min(results.CRCmean,[],1)'] , [max(results.CRCmax,[],1)';max(results.CRCmean,[],1)'],[std(results.CRCmax,[],1)';std(results.CRCmean,[],1)'] ]
+ tabulated_results = [ [mean(results.CRCmax,1)';mean(results.CRCmean,1)'], [min(results.CRCmax,[],1)';min(results.CRCmean,[],1)'] , [max(results.CRCmax,[],1)';max(results.CRCmean,[],1)'],[std(results.CRCmax,[],1)';std(results.CRCmean,[],1)'] ];
