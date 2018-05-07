@@ -72,8 +72,6 @@ function [faxis, MTF, lsf, esf] = LSFcalc_R(im3D, dicom_headers, options)
 % ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 % POSSIBILITY OF SUCH DAMAGE.
 
-clc;
-
 % User selected options
     over_factor = options.over_factor_R;  % Oversampling factor for radial binning
     window = options.use_window_R ; % Decide whether to apply a Hann window to the LSF before calculating the MTF (typically applied)
