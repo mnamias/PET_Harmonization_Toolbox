@@ -443,10 +443,7 @@ options.mode = 'auto';
     xlabel('Spatial position [mm]')
     ylabel('Amplitude');
 
-  % plot the NPS result
-        axes(handles.axes16);
-        psf_mip = mipss(psf_noise);
-        imshow(-psf_mip,[-max(psf_mip(:)) 0])
+  % plot the NPS result        
         
         axes(handles.axes13);
         subplot(1,3,1);
