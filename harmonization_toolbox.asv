@@ -541,7 +541,6 @@ global CRCmax
 global CRCmean
 global CV
 global EARL_mode 
-global data
 global maskx1
 global maskx2
 global masky1
@@ -550,9 +549,6 @@ global I
 global bkg_voi
 
 ratio = 9.75;
-data = struct()
-
-
 data(1).sphere_A = dicom_headers(1).RadiopharmaceuticalInformationSequence.Item_1.RadionuclideTotalDose/1e6; %% Sphere activity in MBq
 data(1).sphere_vol = 1000; %% Sphere dilution volume in ml
 data(1).sphere_reference_time = dicom_headers(1).RadiopharmaceuticalInformationSequence.Item_1.RadiopharmaceuticalStartTime(1:6);
