@@ -339,7 +339,7 @@ function about_Callback(hObject, eventdata, handles)
 
 disclaimer = 'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.';
 
-h = msgbox( {'PET Harmonization Toolbox v1.0 (April 23, 2018).' ' ' 'Copyright 2018 Mauro Namías (mnamias@gmail.com)' ' ' 'This toolbox is to accompany the method published in PMB 2018 "A novel approach for quantitative harmonization in PET" M Namías et al 2018 Phys. Med. Biol. 63 095019.' ' ' disclaimer} ); 
+h = msgbox( {'PET Harmonization Toolbox v1.1 (August 16th, 2023).' ' ' 'Copyright 2018-2023 Mauro Namías (mnamias@gmail.com)' ' ' 'This toolbox is to accompany the method published in PMB 2018 "A novel approach for quantitative harmonization in PET" M Namías et al 2018 Phys. Med. Biol. 63 095019.' ' ' disclaimer} ); 
  
 
 % --------------------------------------------------------------------
@@ -558,7 +558,37 @@ data(1).sphere_vol = 1000; %% Sphere dilution volume in ml
 data(1).sphere_reference_time = dicom_headers(1).RadiopharmaceuticalInformationSequence.Item_1.RadiopharmaceuticalStartTime(1:6);
 data(1).img_time = dicom_headers(1).SeriesTime;
 
-  
+
+
+prompt = {'Enter the volume of the stock solution used to filled the spheeres [ml]:'};
+dlg_title = 'Volume';
+num_lines = 1;
+def = {num2str(data(1).sphere_vol)};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+data(1).sphere_vol = str2num(cell2mat(answer));
+
+
+prompt = {'Enter the activity used to filled the spheeres [MBq]:'};
+dlg_title = 'Activity';
+num_lines = 1;
+def = {num2str(data(1).sphere_A)};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+data(1).sphere_A = str2num(cell2mat(answer));
+
+prompt = {'Enter the activity reference time used to filled the spheeres [hhmmss]:'};
+dlg_title = 'Activity measurement time';
+num_lines = 1;
+def = {data(1).sphere_reference_time};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+data(1).sphere_reference_time = cell2mat(answer);
+
+prompt = {'Enter the start of image acquisition [hhmmss]:'};
+dlg_title = 'Image start time';
+num_lines = 1;
+def = {data(1).img_time};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+data(1).img_time  = cell2mat(answer);
+
 pixel_sizes = [dicom_headers(1).PixelSpacing' dicom_headers(1).SliceThickness]
 options = optimset('TolX',0.01, 'TolFun',0.00001,'Display','iter')
    

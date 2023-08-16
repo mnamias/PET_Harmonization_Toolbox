@@ -541,6 +541,7 @@ global CRCmax
 global CRCmean
 global CV
 global EARL_mode 
+global data
 global maskx1
 global maskx2
 global masky1
@@ -549,12 +550,38 @@ global I
 global bkg_voi
 
 ratio = 9.75;
+data = struct()
+
+
 data(1).sphere_A = dicom_headers(1).RadiopharmaceuticalInformationSequence.Item_1.RadionuclideTotalDose/1e6; %% Sphere activity in MBq
 data(1).sphere_vol = 1000; %% Sphere dilution volume in ml
 data(1).sphere_reference_time = dicom_headers(1).RadiopharmaceuticalInformationSequence.Item_1.RadiopharmaceuticalStartTime(1:6);
 data(1).img_time = dicom_headers(1).SeriesTime;
 
-  
+
+
+prompt = {'Enter the volume of the stock solution used to filled the spheeres [ml]:'};
+dlg_title = 'Volume';
+num_lines = 1;
+def = {num2str(data(1).sphere_vol)};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+data(1).sphere_vol = str2num(cell2mat(answer));
+
+
+prompt = {'Enter the activity used to filled the spheeres [MBq]:'};
+dlg_title = 'Activity';
+num_lines = 1;
+def = {num2str(data(1).sphere_A)};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+data(1).sphere_A = str2num(cell2mat(answer));
+
+prompt = {'Enter the activity reference time used to filled the spheeres [MBq]:'};
+dlg_title = 'Activity';
+num_lines = 1;
+def = {num2str(data(1).sphere_A)};
+answer = inputdlg(prompt,dlg_title,num_lines,def);
+data(1).sphere_A = str2num(cell2mat(answer));
+
 pixel_sizes = [dicom_headers(1).PixelSpacing' dicom_headers(1).SliceThickness]
 options = optimset('TolX',0.01, 'TolFun',0.00001,'Display','iter')
    
