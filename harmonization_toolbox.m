@@ -2,7 +2,7 @@
 % Name of the code: harmonization_menu Toolbox
 %
 % Author: Mauro Namías (mnamias@gmail.com)
-% Copyright (c) 2018-2023, Mauro Namías
+% Copyright (c) 2018-2024, Mauro Namías
 % All rights reserved.
 % 
 % Redistribution and use in source and binary forms, with or without
@@ -125,7 +125,7 @@ guidata(hObject, handles);
 % uiwait(handles.figure1);
 disclaimer = 'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.';
 
-h = warndlg( {'PET Harmonization Toolbox v1.1 (August 16, 2023).' ' ' 'Copyright 2018-2023 Mauro Namías (mnamias@gmail.com)' ' ' 'This toolbox is to accompany the method published in PMB 2018 "A novel approach for quantitative harmonization in PET" by M. Namías et. al.' ' ' disclaimer} ); 
+h = warndlg( {'PET Harmonization Toolbox v1.1.1 (January 18, 2024).' ' ' 'Copyright 2018-2024 Mauro Namías (mnamias@gmail.com)' ' ' 'This toolbox is to accompany the method published in PMB 2018 "A novel approach for quantitative harmonization in PET" by M. Namías et. al.' ' ' disclaimer} ); 
  
 addpath([pwd filesep 'Functions']);
 addpath([pwd filesep 'Functions_from_other_authors']);
@@ -339,7 +339,7 @@ function about_Callback(hObject, eventdata, handles)
 
 disclaimer = 'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.';
 
-h = msgbox( {'PET Harmonization Toolbox v1.1 (August 16th, 2023).' ' ' 'Copyright 2018-2023 Mauro Namías (mnamias@gmail.com)' ' ' 'This toolbox is to accompany the method published in PMB 2018 "A novel approach for quantitative harmonization in PET" M Namías et al 2018 Phys. Med. Biol. 63 095019.' ' ' disclaimer} ); 
+h = msgbox( {'PET Harmonization Toolbox v1.1.1 (January 18th, 2024).' ' ' 'Copyright 2018-2024 Mauro Namías (mnamias@gmail.com)' ' ' 'This toolbox is to accompany the method published in PMB 2018 "A novel approach for quantitative harmonization in PET" M Namías et al 2018 Phys. Med. Biol. 63 095019.' ' ' disclaimer} ); 
  
 
 % --------------------------------------------------------------------
