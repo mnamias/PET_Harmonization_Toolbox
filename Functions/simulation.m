@@ -98,10 +98,11 @@ global mean_bkg
 
 acq_times = {dicom_headers.AcquisitionTime};
 acq_times = unique(acq_times);
+frame_duration = dicom_headers(1).ActualFrameDuration
 number_beds = length(acq_times);
 set(handles.edit6, 'String', num2str(number_beds));
 set(handles.edit5, 'String', num2str(mean_bkg/1000));
-
+set(handles.edit7, 'String', num2str(frame_duration/1000));
 
 pushbutton2_Callback(hObject, eventdata, handles) 
 
@@ -347,7 +348,8 @@ cylinder_CV = avg_std/mean_bkg;
 %Determine the number of bed positions
 acq_times = {dicom_headers.AcquisitionTime};
 acq_times = unique(acq_times);
-number_beds = length(acq_times);
+%number_beds = length(acq_times);
+number_beds = str2num(get(handles.edit6, 'String'));
 half_life = 109.8; % 18F half life in minutes
 frame_duration = dicom_headers(1).ActualFrameDuration/60000; % cylindrical phantom frame duration in minutes
 

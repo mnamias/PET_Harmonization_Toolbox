@@ -159,7 +159,12 @@ thk2 = abs(dicom_headers(2).ImagePositionPatient(3)-dicom_headers(1).ImagePositi
 dicom_headers(1).SliceThickness = min(thk,thk2);
 
 showfig = 0;
-results = check_phantom(image, dicom_headers, showfig);
+results = []
+
+try
+    results = check_phantom(image, dicom_headers, showfig);
+end
+
 
 
 mip = mipss(image);
@@ -168,14 +173,10 @@ imshow(-squeeze(image(:,round(end/2),:)),[-max(image(:))*1.5 0])
 set(handles.text1,'String','Reading files... done!')
 set(handles.text2,'String',['Date: ' dicom_headers(1).SeriesDate])
 set(handles.text3,'String',['Time: ' dicom_headers(1).SeriesTime])
-set(handles.text4,'String',['Series description: ' dicom_headers(1).SeriesDescription])
 
-% Enable processing menu
-set(handles.proc_menu,'Enable','on')
-
-
-
-%set(h, 'position', [500 400 500 400]); %makes box bigger
+try
+    set(handles.text4,'String',['Series description: ' dicom_headers(1).SeriesDescription])
+    
 h = msgbox({'Phantom Acquisition QA:' ['X-tilt: ' num2str(results.x_tilt) ' degrees']...
     ['X-offset: ' num2str(results.x_offset) ' mm']...
     ['Y-tilt: ' num2str(results.y_tilt) ' degrees']...
@@ -183,10 +184,22 @@ h = msgbox({'Phantom Acquisition QA:' ['X-tilt: ' num2str(results.x_tilt) ' degr
     ['Z-offset: ' num2str(results.z_offset) ' mm']...
     });
 
+set(h, 'position', [500 400 500 400]); %makes box bigger
+
 ah = get( h, 'CurrentAxes' );
 ch = get( ah, 'Children' );
 set(ch, 'FontName', 'Century Gothic No11 L');
 set(ch, 'FontSize', 10);
+
+catch
+    disp('Falla')
+end
+
+% Enable processing menu
+set(handles.proc_menu,'Enable','on')
+
+
+
 
 % --------------------------------------------------------------------
 function proc_menu_Callback(hObject, eventdata, handles)
@@ -513,7 +526,7 @@ thk2 = abs(dicom_headers(2).ImagePositionPatient(3)-dicom_headers(1).ImagePositi
 dicom_headers(1).SliceThickness = min(thk,thk2);
 
 showfig = 0;
-results = check_phantom(image, dicom_headers, showfig);
+%results = check_phantom(image, dicom_headers, showfig);
 
 
 mip = single(mip_z(image));
