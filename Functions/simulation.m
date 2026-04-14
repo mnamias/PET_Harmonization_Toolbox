@@ -94,10 +94,13 @@ guidata(hObject, handles);
 % UIWAIT makes simulation wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 global dicom_headers
+global mean_bkg
+
 acq_times = {dicom_headers.AcquisitionTime};
 acq_times = unique(acq_times);
 number_beds = length(acq_times);
 set(handles.edit6, 'String', num2str(number_beds));
+set(handles.edit5, 'String', num2str(mean_bkg/1000));
 
 
 pushbutton2_Callback(hObject, eventdata, handles) 

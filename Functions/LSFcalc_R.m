@@ -156,7 +156,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
 
     mip = mipss(im3D);
     f1 = figure;
-    imagesc(-mip);
+    imagesc(mip);
     colormap gray
     hold on;
     axis image;
@@ -223,7 +223,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     imaxisy = [1:size(im,1)] .* pixely;
    
     f2 = figure;
-    imagesc(-imavg, [-max(imavg(:))*1.5 0])
+    imagesc(imavg, [min(imavg(:)) max(imavg(:))*1.5])
     xlabel('pixel')
     ylabel('pixel')
     colormap gray
@@ -366,7 +366,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     
    
     f3 = figure;
-    imagesc([imaxisy(1) imaxisy(end)],[imaxisx(1) imaxisx(end)], -imavg, [-1.5 0])
+    imagesc([imaxisy(1) imaxisy(end)],[imaxisx(1) imaxisx(end)], imavg, [0 1.5])
     xlabel(' mm')
     ylabel(' mm')
     title('Radial LSF processing: Averaged and normalized [0, 1] image')
@@ -464,7 +464,10 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     xlabel('Radius (mm)')
     ylabel('Normalized ESF')
     grid on
-    axis([rbin(1) rbin(end) -1.2*min(esf) 1.1*max(esf)])
+
+    try
+        axis([rbin(1) rbin(end) -1.2*min(esf) 1.1*max(esf)])
+    end
 
     sesf = esf;
 
@@ -496,13 +499,18 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     end
     
     if(manual_flag)
-        close(f5)
+        try
+            close(f5)
+        end
     end
     
 
 % Calculate the LSF from the ESF
-    lsf = diff(esf);
+    %lsf = diff(esf);
     
+    %esf_s = sgolayfilt(esf, 3, 21);
+    %lsf = gradient(esf_s);
+    lsf = diff(esf)
     % artifacts caused by empty bins likely have a value of -/+ 1, so try to 
     % remove them.
     I = find(abs(lsf)> 0.9);
@@ -592,7 +600,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     T = fftshift(fft(lsfw));
     faxis = -1/(2*rstep):1/((nlsf-1)*rstep):1/(2*rstep);
     MTF = abs(T);
-
+    %MTF = smooth(MTF,5);
     if(thr == 2)
         MTF(MTF>1) = (MTF(MTF>1)-1)*2+1;
     end
@@ -631,7 +639,15 @@ z_profile = squeeze(sum(sum(im3D,1),2));
 
     maxi = find(abs(lsf)==max(abs(lsf(:))));
     pad = round(20*over_factor/pixelx);
-    lsf = lsf(maxi-pad:maxi+pad);
+    disp('Maxi: ')
+    disp(maxi)
+    try
+        lsf = lsf(maxi-pad:maxi+pad);
+    catch
+        disp('Error en padding LSF')
+    end
+    
+    
 
     lsf = double(lsf/sum(lsf(:)));
   

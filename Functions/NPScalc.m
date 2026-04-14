@@ -76,7 +76,7 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
 %%
     mip = mipss(image); % show a mip of the phantom image    
     f1 = figure;
-    imagesc(-mip, [-max(mip(:))*1.5 0])
+    imagesc(-mip, [-200 200])
     colormap gray
     hold on
     axis image;
@@ -124,15 +124,16 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
     
     image = image(:,:,  BGxROI1: BGxROI2);
 
-    imavg = sum(image,3);  % get an average slice by summing in the Z-direction
+    imavg = mean(image,3);  % get an average slice by summing in the Z-direction
     [a,b,c] = size(image);
 
 
 
 % Filter the average image to reduce noise and find the centroid
-    h = fspecial('gaussian',[31 31], 27);
-    fimavg = imfilter(imavg,h);
-    s = regionprops(fimavg>max(fimavg(:))*0.2, fimavg, {'Centroid','WeightedCentroid'});
+   % h = fspecial('gaussian',[31 31], 27);
+   % fimavg = imfilter(imavg,h);
+   imtool(imavg,[-200 200])
+    s = regionprops(imavg>-100, imavg, {'Centroid','WeightedCentroid'});
     cx = s.WeightedCentroid(1);  %x coordinate of the centroid
     cy = s.WeightedCentroid(2);  %y coordinate of the centroid
 
@@ -143,9 +144,10 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
     image = circshift(image,dx,2);
 
 % Processing options 
-    calczero = 0;  % when set to 0, the NPS(0,0,0) value is estimated based on the surrounding 26 voxel values to try remove any zero-frequency artifacts
-    use_window = 0; % use a Kaiser window to smooth the spectrum;
-    rstep = 0.025;  % This will be the effective bin size after forming the radially averaged NPS.
+    calczero = 1;  % when set to 0, the NPS(0,0,0) value is estimated based on the surrounding 26 voxel values to try remove any zero-frequency artifacts
+    use_window = 1; % use a Kaiser window to smooth the spectrum;
+    %rstep = 0.025;  % This will be the effective bin size after forming the radially averaged NPS.
+    rstep = 0.001;  % This will be the effective bin size after forming the radially averaged NPS.
     calcrstep = 1;
 
 % Image size and pixel dimensions
@@ -154,7 +156,9 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
     [Ny,Nx,Nz] = size(image);
 
 % Find overlapping positions of the VOIs
-    deltax = round(60/pixelx); % spacing of the VOIs
+    deltax = round(25/pixelx)+1; % spacing of the VOIs
+    %deltax = round(30/pixelx); % spacing of the VOIs
+    %deltax = round(35); % spacing of the VOIs
     if(mod(deltax,2))
     else
         deltax = deltax+1;
@@ -176,7 +180,7 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
 %  in rcenter and the distance between the centers of ROIs chosen.
     rcenter = 45; % radius in mm along which to center ROIS, a value of 50 mm corresponds to half the radius of the phantom
     deltar = 30; % distance along the radial arc in mm between centers of ROIs in the axial plane
-    NRoisXY = 12; % Number of equally spaced ROIs in the tangential direction 
+    NRoisXY = 32; % Number of equally spaced ROIs in the tangential direction 
     deltaangle = 2*pi/180;  % the range of angles in radians over which to look for a suitable pixel on which to center an ROI
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -260,15 +264,15 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
     L = find(Lobj == max(Lobj));
     S = regionprops(CC,'Centroid');
 
-    h = fspecial('gaussian',[17 17], 17);
-    fimavg = imfilter(imavg,h);  % Filtered average image
-    s = regionprops(fimavg>max(fimavg(:))*0.1, fimavg, {'Centroid','WeightedCentroid'});
+%    h = fspecial('gaussian',[17 17], 17);
+%    fimavg = imfilter(imavg,h);  % Filtered average image
+    s = regionprops(imavg>-10, imavg, {'Centroid','WeightedCentroid'});
     centroid.y = round(s.Centroid(2));
     centroid.x = round(s.Centroid(1));
 
     % Plot the average image with the centroid marked
     f2 = figure;
-    imagesc([imaxisx(1) imaxisx(end)], [imaxisy(1) imaxisy(end) ], -imavg, [-max(imavg(:))*1.5 0])
+    imagesc([imaxisx(1) imaxisx(end)], [imaxisy(1) imaxisy(end) ], -imavg, [-200 200])
     xlabel('mm')
     ylabel('mm')
     title('NPS estimation: Cylinder with center and VOIs marked')
@@ -369,6 +373,7 @@ manual_flag = strcmp(options.mode, 'manual');  % manual or automatic processing
                 disp('Warning! bad z ROI');
                 ROIzm(:,:,:,nROI) =  im3Dzm(y1:y2,x1:x2,z1:z2);
             else
+                disp('Good Z ROI');
                 ROIzm(:,:,:,nROI) =  im3Dzm(y1:y2,x1:x2,z1:z2) ;
             end
         end
@@ -446,16 +451,16 @@ end
         subplot(3,1,1);
         plot(xaxis,Wavg(:,ceil(end/2),ceil(end/2)),'k.-');
         xlabel('x-dir (mm^{-1})');
-        ylabel('NPS_x ((Bq/ml)^2 mm^3)');
+        ylabel('NPS_x (HU^2 mm^3)');
         subplot(3,1,2);
         plot(yaxis,Wavg(ceil(end/2),:,ceil(end/2)),'k.-');
         xlabel('y-dir (mm^{-1})');
-        ylabel('NPS_y ((Bq/ml)^2 mm^3)');
+        ylabel('NPS_y (HU^2 mm^3)');
         subplot(3,1,3);
         zvalue = squeeze(Wavg(ceil(end/2),ceil(end/2),:));
         plot(zaxis,zvalue,'k.-');
         xlabel('z-dir (mm^{-1})')
-        ylabel('NPS_z ((Bq/ml)^2 mm^3)');
+        ylabel('NPS_z (HU^2 mm^3)');
    
 
 
@@ -514,7 +519,7 @@ end
     f4 = figure;
     semilogy(rbin,npsr,'.-')
     xlabel('spatial frequency (mm^{-1})')
-    ylabel('NPS_r (Bq/ml^2 mm^3)')
+    ylabel('NPS_r (HU^2 mm^3)')
     grid on
     axis([rbin(1) rbin(end) -1.2*min(npsr) 1.1*max(npsr)])
     title('Average Radial Noise Power Spectrum')
@@ -530,12 +535,23 @@ end
     psf = real(ifftshift(ifftn(fftshift(spectrum))));
     psf = psf/sum(psf(:));
 
-    if(manual_flag)
-    close(f1)
-    close(f2)
-    close(f3)
-    close(f4)
-    end
+%     if(manual_flag)
+%     close(f1)
+%     close(f2)
+%     close(f3)
+%     close(f4)
+%     end
     
+imtool(Wavg(:,:,ceil(end/2)),[0 max(Wavg(:))])
+
+  f6 = figure;
+   plot(rbin,npsr,'.-')
+    xlabel('spatial frequency (mm^{-1})')
+    ylabel('NPS_r (HU^2 mm^3)')
+    grid on
+    axis([rbin(1) rbin(end) -1.2*min(npsr) 1.1*max(npsr)])
+    title('Average Radial Noise Power Spectrum')
+    
+    fprintf('NPS calculated.\n\n');
     
 return;
