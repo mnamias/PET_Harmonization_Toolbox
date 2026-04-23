@@ -72,6 +72,13 @@ function [faxis, MTF, lsf, esf] = LSFcalc_R(im3D, dicom_headers, options)
 % ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 % POSSIBILITY OF SUCH DAMAGE.
 
+
+im3D(im3D<-1000) = -1000;
+clc
+disp('Setting pixels <-1000 to -1000')
+%pause(2)
+
+
 % User selected options
     over_factor = options.over_factor_R;  % Oversampling factor for radial binning
     window = options.use_window_R ; % Decide whether to apply a Hann window to the LSF before calculating the MTF (typically applied)
@@ -155,49 +162,55 @@ z_profile = squeeze(sum(sum(im3D,1),2));
 
 
     mip = mipss(im3D);
-    f1 = figure;
-    imagesc(mip);
-    colormap gray
-    hold on;
-    axis image;
-    impixelinfo;
-    %title('Radial LSF: axial range definition')
-    %title( {'Click and drag to create a rectangular ROI representing the axial range.' 'Double click the ROI when finished.'})
     
+    %size(mip)
+    %pause(2)
     manual_flag = strcmp(options.mode, 'manual');
-    
-    if(manual_flag) % manual definition of ROIs
-        title( {'Click and drag to create a rectangular ROI representing the axial range.' 'Double click the ROI when finished.'})
 
-  
+    if(size(mip,2)>=10)
+        f1 = figure;
+        imagesc(mip);
+        colormap gray
+        hold on;
+        axis image;
+        impixelinfo;
+        %title('Radial LSF: axial range definition')
+        %title( {'Click and drag to create a rectangular ROI representing the axial range.' 'Double click the ROI when finished.'})
 
-        fprintf('Click and drag to create a rectangular ROI representing the axial analysis range.  Double click the ROI when finished.\n\n');
-        h = imrect;
-        ptROI = wait(h);
+
+        if(manual_flag) % manual definition of ROIs
+            title( {'Click and drag to create a rectangular ROI representing the axial range.' 'Double click the ROI when finished.'})
+
+
+
+            fprintf('Click and drag to create a rectangular ROI representing the axial analysis range.  Double click the ROI when finished.\n\n');
+            h = imrect;
+            ptROI = wait(h);
+
+            BGxROI1 = round(ptROI(1));
+            BGxROI2 = BGxROI1 + round(ptROI(3));
+            BGyROI1 = round(ptROI(2));
+            BGyROI2 = BGyROI1 + round(ptROI(4));
+
+            % force selected ROI to be within the bounds of the image
+            BGxROI1 = min(BGxROI1,size(mip,2));
+            BGxROI2 = min(BGxROI2,size(mip,2));
+            BGyROI1 = min(BGyROI1,size(mip,1));
+            BGyROI2 = min(BGyROI2,size(mip,1));
+            BGxROI1 = max(BGxROI1,1);
+            BGxROI2 = max(BGxROI2,1);
+            BGyROI1 = max(BGyROI1,1);
+            BGyROI2 = max(BGyROI2,1);
+
+            im3D = im3D(:,:,  BGxROI1: BGxROI2);  % crop the image to the selected analysis range
+            z_range = BGxROI1: BGxROI2;
+
+            if(manual_flag)
+                close(f1)
+            end
         
-        BGxROI1 = round(ptROI(1));
-        BGxROI2 = BGxROI1 + round(ptROI(3));
-        BGyROI1 = round(ptROI(2));
-        BGyROI2 = BGyROI1 + round(ptROI(4));
-
-        % force selected ROI to be within the bounds of the image
-        BGxROI1 = min(BGxROI1,size(mip,2));
-        BGxROI2 = min(BGxROI2,size(mip,2));
-        BGyROI1 = min(BGyROI1,size(mip,1));
-        BGyROI2 = min(BGyROI2,size(mip,1));
-        BGxROI1 = max(BGxROI1,1);
-        BGxROI2 = max(BGxROI2,1);
-        BGyROI1 = max(BGyROI1,1);
-        BGyROI2 = max(BGyROI2,1);
-
-        im3D = im3D(:,:,  BGxROI1: BGxROI2);  % crop the image to the selected analysis range
-        z_range = BGxROI1: BGxROI2;
-
-        if(manual_flag)
-            close(f1)
-        end
-        
     
+        
     else   % Automatic ROIs
         z_profile = squeeze(sum(sum(im3D,1),2));
         dz_profile = diff(z_profile(1:end/2)); 
@@ -211,11 +224,14 @@ z_profile = squeeze(sum(sum(im3D,1),2));
         title('Radial LSF estimation: Automatic ROI definition (axial analysis range)');
         
         
+        end
+    
+    else
     end
     
     
 % Average the axial analysis range to make a 2D slice  
-    imavg = sum(im3D,3);
+    imavg = sum(im3D,3)/size(im3D,3);
     im = imavg;
  
 % Show averaged image 
@@ -510,7 +526,7 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     
     %esf_s = sgolayfilt(esf, 3, 21);
     %lsf = gradient(esf_s);
-    lsf = diff(esf)
+    lsf = diff(esf);
     % artifacts caused by empty bins likely have a value of -/+ 1, so try to 
     % remove them.
     I = find(abs(lsf)> 0.9);
@@ -568,7 +584,10 @@ z_profile = squeeze(sum(sum(im3D,1),2));
     end
 
     if( thr > 0 && thr < 2)
-        lsfw = lsf .* w';
+          size(lsf)
+        size(w)
+        lsfw = lsf .* w;
+      
     else        
         if(thr ==0)
             lsfw = lsf .* w;
@@ -613,8 +632,10 @@ z_profile = squeeze(sum(sum(im3D,1),2));
         filter(abs(faxis)>fmax*1)= 0;
         length(filter)
         filter = smooth(filter,round(length(filter)*fmax/4))';
-        MTF = MTF.*filter;
-        T = T.*filter;
+        size(MTF)
+        size(filter)
+        MTF = MTF.*filter';
+        T = T.*filter';
     end
 
     if(options.use_antialias_R && thr==0)

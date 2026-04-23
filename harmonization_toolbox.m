@@ -257,6 +257,8 @@ global flag_NPS
 
 load harmonization_options.mat options
 options.mode = 'manual';
+
+
 [faxis_r, MTF_r, lsf_r, esf_r] = LSFcalc_R(image, dicom_headers, options);
 
 % plot MTF_r and LSF_r
@@ -283,6 +285,13 @@ flag_lsf_r = 1;
 if(flag_lsf_a & flag_lsf_r & flag_NPS)    
     set(handles.harmonization_menu,'Enable','on');
 end
+
+figure()
+plot(faxis_r(faxis_r>=0),MTF_r(faxis_r>=0),'k-')
+title('Radial MTF')
+xlabel('Spatial frequency [mm-1]')
+ylabel('Amplitude');
+
 
 % --------------------------------------------------------------------
 function nps_Callback(hObject, eventdata, handles)
